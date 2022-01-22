@@ -1,26 +1,26 @@
 import React from "react";
 import Image from "next/image";
-import {Store} from "../types";
+import {Photo} from "../types";
 import styles from "./card.module.css"
 
 interface Props {
-  store: Store;
+  photo: Photo;
 }
 
-const StoreCard: React.VFC<Props> = ({store}) => {
+const StoreCard: React.VFC<Props> = ({photo}) => {
   return (
     <div className={styles.card}>
         <Image
-            alt={store.title}
+            alt={photo.title}
             height={280}
             width={280}
             layout="fixed"
             objectFit="cover"
-            src={store.image}            
+            src={photo.image}            
             className={styles.img}
         />
         <div className={styles.container}>
-            <h4><b>{store.title}</b></h4>
+            <h4><b>{photo.title}</b></h4>
         </div>
     </div>
   );
