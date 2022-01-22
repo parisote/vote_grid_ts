@@ -5,16 +5,17 @@ import { useState, useEffect } from 'react';
 import { signIn, signOut, useSession } from "next-auth/react"
 import AccessDenied from '../components/access-denied';
 import styles from '../components/card.module.css'
+import { IPhoto } from "../models/Photo";
 
 export default function Page () {
 
-    const [ photos, setPhotos ] = useState<Photo[]>([]);
+    const [ photos, setPhotos ] = useState<IPhoto[]>([]);
     const { data: session } = useSession()
 
     useEffect(() => {
         fetch('/api/images')
         .then((res) => res.json())
-        .then((photos:Photo[]) => setPhotos(photos));
+        .then((photos:IPhoto[]) => setPhotos(photos));
     }, []);
 
     if(!session){

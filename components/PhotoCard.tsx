@@ -2,9 +2,16 @@ import React from "react";
 import Image from "next/image";
 import {Photo} from "../types";
 import styles from "./card.module.css"
+import { IconButton } from '@mui/material'
+import FavoriteB from '@mui/icons-material/FavoriteBorder'
+import Favorite from '@mui/icons-material/Favorite'
 
 interface Props {
   photo: Photo;
+}
+
+function incrementVoteCount(id: number) {
+  console.log(id)
 }
 
 const StoreCard: React.VFC<Props> = ({photo}) => {
@@ -21,6 +28,13 @@ const StoreCard: React.VFC<Props> = ({photo}) => {
         />
         <div className={styles.container}>
             <h4><b>{photo.title}</b></h4>
+            <div className={styles.divright}>
+            <IconButton color="primary" onClick={() => {
+                incrementVoteCount(photo.id)
+              }}>
+              <FavoriteB />
+            </IconButton>
+            </div>
         </div>
     </div>
   );
