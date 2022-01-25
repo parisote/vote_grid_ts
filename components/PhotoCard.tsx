@@ -1,20 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {Photo} from "../types";
 import styles from "./card.module.css"
 import { IconButton } from '@mui/material'
-import FavoriteB from '@mui/icons-material/FavoriteBorder'
-import Favorite from '@mui/icons-material/Favorite'
+import Icon from '@mui/material/Icon';
+import { useRouter } from 'next/router';
 
 interface Props {
   photo: Photo;
 }
 
-function incrementVoteCount(id: number) {
-  console.log(id)
-}
-
 const StoreCard: React.VFC<Props> = ({photo}) => {
+  const [ icon_name, setIconName ] = useState("favorite_border");
+  const { query } = useRouter();
+
+  const addVote = async (id: number) => {
+    try {
+      await fetch("http://localhost:3000/api/images/" + id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(photo),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className={styles.card}>
         <Image
@@ -28,11 +41,14 @@ const StoreCard: React.VFC<Props> = ({photo}) => {
         />
         <div className={styles.container}>
             <h4><b>{photo.title}</b></h4>
+            { photo.votes }
             <div className={styles.divright}>
             <IconButton color="primary" onClick={() => {
-                incrementVoteCount(photo.id)
+              photo.votes = icon_name === "favorite_border" ? photo.votes + 1 : photo.votes - 1;
+              setIconName(icon_name === "favorite" ? "favorite_border" : "favorite")
+              addVote(photo.id)       
               }}>
-              <FavoriteB />
+              <Icon>{icon_name}</Icon>
             </IconButton>
             </div>
         </div>

@@ -6,6 +6,12 @@ import { IPhoto } from "../../models/Photo"
 dbConnect();
 
 export default async function getPhotos(req: NextApiRequest, res: NextApiResponse) {
+  const {
+    method,
+    query: { id },
+    body,
+  } = req;
+
   switch (req.method) {
     case "GET":
         try {
@@ -14,17 +20,6 @@ export default async function getPhotos(req: NextApiRequest, res: NextApiRespons
         } catch (err) {
             console.log(err)
             res.status(500).send("error")
-        }
-    case "POST":
-        try {
-          console.log(req.body)
-          const body: IPhoto = JSON.parse(req.body)
-          const newPhoto = new Photo(body)
-          const saved = await newPhoto.save()
-          res.send(saved)
-        } catch (err) {
-          console.log(err)
-          res.status(500).send("error")
         }
     }
 }

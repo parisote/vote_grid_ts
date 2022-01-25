@@ -18,7 +18,6 @@ export default NextAuth({
     },
     callbacks: {
       redirect({ url, baseUrl }) {
-        console.log(url)
         if (url.startsWith(baseUrl)) return url
         else if (url.startsWith("/")) return new URL(url, baseUrl).toString()
         return baseUrl

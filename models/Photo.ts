@@ -4,6 +4,7 @@ export interface IPhoto extends Document {
     id: number,
     title: string,
     image: string,
+    votes: number
 }
 
 const PhotoSchema: Schema = new Schema({
@@ -15,6 +16,9 @@ const PhotoSchema: Schema = new Schema({
     },
     image: {
         type: String
+    },
+    votes: {
+        type: Number
     }
 })
 
