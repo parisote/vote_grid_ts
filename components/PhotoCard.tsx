@@ -5,12 +5,14 @@ import styles from "./card.module.css"
 import { IconButton } from '@mui/material'
 import Icon from '@mui/material/Icon';
 import { useRouter } from 'next/router';
+import { useSession } from "next-auth/react"
 
 interface Props {
   photo: Photo;
 }
 
-const StoreCard: React.VFC<Props> = ({photo}) => {
+const StoreCard: React.VFC<Props> = ({photo, handleIncrementCounter }) => {
+  const { data: session, status } = useSession()
   const [ icon_name, setIconName ] = useState("favorite_border");
   const { query } = useRouter();
 
@@ -27,6 +29,33 @@ const StoreCard: React.VFC<Props> = ({photo}) => {
       console.error(error);
     }
   };
+
+  const voteAddUser = async (email: string) => {
+    try {
+      await fetch("http://localhost:3000/api/users/add/" + email, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const voteRemoveUser = async (email: string) => {
+    try {
+      await fetch("http://localhost:3000/api/users/remove/" + email, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <div className={styles.card}>
@@ -46,7 +75,12 @@ const StoreCard: React.VFC<Props> = ({photo}) => {
             <IconButton color="primary" onClick={() => {
               photo.votes = icon_name === "favorite_border" ? photo.votes + 1 : photo.votes - 1;
               setIconName(icon_name === "favorite" ? "favorite_border" : "favorite")
-              addVote(photo.id)       
+              addVote(photo.id)
+              if(icon_name === "favorite")
+                voteRemoveUser(session.user.email)
+              else
+                voteAddUser(session.user.email)
+                handleIncrementCounter
               }}>
               <Icon>{icon_name}</Icon>
             </IconButton>

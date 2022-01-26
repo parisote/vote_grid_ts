@@ -1,9 +1,25 @@
 import { signIn, signOut, useSession } from "next-auth/react"
+import { useState, useEffect } from 'react';
 import styles from "./header.module.css"
+import { IUser } from "../models/User";
 
 export default function Header() {
   const { data: session, status } = useSession()
   const loading = status === 'loading'
+
+  const [ user, setUser ] = useState<IUser[]>([]);
+
+  if(session){
+    useEffect(() => {
+      fetch('/api/users/'+session.user.email, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }})
+      .then((res) => res.json())
+      .then((user:IUser[]) => setUser(user));
+    },[]);
+  }
 
   return (
     <header>
@@ -44,6 +60,7 @@ export default function Header() {
                 <br />
                 <strong>{session.user.email || session.user.name}</strong>
               </span>
+                <span className={styles.centerInText}><strong>{user.votes}</strong></span>
               <a
                 href={`/api/auth/signout`}
                 className={styles.button}
