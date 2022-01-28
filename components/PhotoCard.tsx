@@ -11,7 +11,7 @@ interface Props {
   photo: Photo;
 }
 
-const StoreCard: React.VFC<Props> = ({photo, handleIncrementCounter }) => {
+const StoreCard: React.VFC<Props> = ({photo }) => {
   const { data: session, status } = useSession()
   const [ icon_name, setIconName ] = useState("favorite_border");
   const { query } = useRouter();
@@ -80,7 +80,6 @@ const StoreCard: React.VFC<Props> = ({photo, handleIncrementCounter }) => {
                 voteRemoveUser(session.user.email)
               else
                 voteAddUser(session.user.email)
-                handleIncrementCounter
               }}>
               <Icon>{icon_name}</Icon>
             </IconButton>
